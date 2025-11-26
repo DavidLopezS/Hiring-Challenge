@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXIST product_categories (
+CREATE TABLE IF NOT EXISTS product_categories (
     id SERIAL PRIMARY KEY,
     code VARCHAR(64) UNIQUE NOT NULL,
     name VARCHAR(128) NOT NULL,

@@ -3,12 +3,13 @@ package catalog
 import "github.com/mytheresa/go-hiring-challenge/models"
 
 type Response struct {
+	Total    int       `json:"total"`
 	Products []Product `json:"products"`
 }
 
 type Category struct {
 	Code string `json:"code"`
-	Name string `json:"name`
+	Name string `json:"name"`
 }
 
 type Product struct {
@@ -28,13 +29,14 @@ func NewProductDTO(p models.Product) Product {
 	}
 }
 
-func NewResponseDTO(products []models.Product) Response {
+func NewResponseDTO(products []models.Product, total int64) Response {
 	dtoList := make([]Product, len(products))
 	for i, p := range products {
 		dtoList[i] = NewProductDTO(p)
 	}
 
 	return Response{
+		Total:    int(total),
 		Products: dtoList,
 	}
 }

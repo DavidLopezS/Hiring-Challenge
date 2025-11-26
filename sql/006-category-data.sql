@@ -1,7 +1,7 @@
 INSERT INTO product_categories (code, name) VALUES
-('CLOTHING', 'Clothing')
-('SHOES', 'Shoes')
-('ACCESSORIES', 'Accessories')
+('CLOTHING', 'Clothing'),
+('SHOES', 'Shoes'),
+('ACCESSORIES', 'Accessories');
 
 UPDATE products SET category_id = (SELECT id FROM product_categories WHERE code = 'CLOTHING')
 WHERE code IN ('PROD001', 'PROD004', 'PROD007');
