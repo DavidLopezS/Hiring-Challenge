@@ -14,6 +14,14 @@ func NewProductsRepository(db *gorm.DB) *ProductsRepository {
 	}
 }
 
+func (r *ProductsRepository) GetProductByCode(code string) (*Product, error) {
+	var product Product
+	if err := r.db.Preload("Variants").Preload("Category").Where("code = ?", code).First(&product).Error; err != nil {
+		return nil, err
+	}
+	return &product, nil
+}
+
 func (r *ProductsRepository) GetAllProducts(offset, limit int, category string, priceLt float64) ([]Product, int64, error) {
 	var products []Product
 	var total int64

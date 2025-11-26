@@ -17,6 +17,26 @@ func NewCatalogHandler(r ProductFetcher) *CatalogHandler {
 	}
 }
 
+func (h *CatalogHandler) HandleGetByCode(w http.ResponseWriter, r *http.Request) {
+	code := r.PathValue("code")
+	if code == "" {
+		http.Error(w, "missing production code", http.StatusBadRequest)
+		return
+	}
+
+	product, err := h.repo.GetProductByCode(code)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(product); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 func (h *CatalogHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 	offset := 0
 	limit := 10
