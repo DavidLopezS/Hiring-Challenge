@@ -1,10 +1,11 @@
 package catalog
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/mytheresa/go-hiring-challenge/app/api"
 )
 
 type CatalogHandler struct {
@@ -20,21 +21,17 @@ func NewCatalogHandler(r ProductFetcher) *CatalogHandler {
 func (h *CatalogHandler) HandleGetByCode(w http.ResponseWriter, r *http.Request) {
 	code := r.PathValue("code")
 	if code == "" {
-		http.Error(w, "missing production code", http.StatusBadRequest)
+		api.ErrorResponse(w, http.StatusBadRequest, "missing production code")
 		return
 	}
 
 	product, err := h.repo.GetProductByCode(code)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		api.ErrorResponse(w, http.StatusNotFound, err.Error())
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(product); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	api.OKResponse(w, product)
 }
 
 func (h *CatalogHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
@@ -71,16 +68,12 @@ func (h *CatalogHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 
 	res, total, err := h.repo.GetAllProducts(offset, limit, category, priceLt)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		api.ErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	// Return the products as a JSON response
 	response := NewResponseDTO(res, total)
 
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	api.OKResponse(w, response)
 }
