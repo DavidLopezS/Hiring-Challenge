@@ -9,10 +9,10 @@ import (
 )
 
 type CategoriesHandler struct {
-	repo *models.CategoriesRepository
+	repo CategoriesFetcher
 }
 
-func NewCategoriesHandler(r *models.CategoriesRepository) *CategoriesHandler {
+func NewCategoriesHandler(r CategoriesFetcher) *CategoriesHandler {
 	return &CategoriesHandler{repo: r}
 }
 
